@@ -18,7 +18,14 @@ function main()
 {
     // getComicInfo();
     // print_r(getVideoInfo());
-    print_r(getComicInfo());
+    // print_r(getComicInfo());
+
+    $table = 'comic_authors';
+    // foreach (getVideoInfo() as $key => $value) {
+    //     insert($table, ['name' => $key]);
+    //     # code...
+    // }
+    showTableInfo($table);
 }
 
 function getComicInfo(): array
@@ -140,6 +147,95 @@ function updateActressesOrAuthors(): void
         insertData($table, $data);
     }
     showTableInfo($table);
+}
+
+function insert($table, $data)
+{
+    switch ($table) {
+        case 'storage_places':
+            insertStoragePlaces($table, $data);
+            break;
+
+        case 'comic_authors':
+            insertComicAuthors($table, $data);
+            break;
+
+        case 'comic':
+            insertComic($table, $data);
+            break;
+
+        case 'video_actresses':
+            insertVideoActresses($table, $data);
+            break;
+
+        case 'video':
+            insertVideo($table, $data);
+            break;
+
+        default:
+            # code...
+            break;
+    }
+}
+
+/**
+ * @var $data['name'] required
+ * @var $data['type'] required
+ * 
+ */
+function insertStoragePlaces(string $table, array $data)
+{
+    $data['id'] = uniqid();
+    $sql = new Mysql();
+    $sql->insert($table, $data);
+}
+
+/**
+ * @var $data['name'] required
+ * 
+ */
+function insertComicAuthors(string $table, array $data)
+{
+    $data['id'] = uniqid();
+    $sql = new Mysql();
+    $sql->insert($table, $data);
+}
+
+/**
+ * @var $data['author_id'] required
+ * @var $data['place_id'] required
+ * @var $data['name'] required
+ * 
+ */
+function insertComic(string $table, array $data)
+{
+    $data['id'] = uniqid();
+    $sql = new Mysql();
+    $sql->insert($table, $data);
+}
+
+/**
+ * @var $data['name'] required
+ * 
+ */
+function insertVideoActresses(string $table, array $data)
+{
+    $data['id'] = uniqid();
+    $sql = new Mysql();
+    $sql->insert($table, $data);
+}
+
+/**
+ * @var $data['actress_id'] required
+ * @var $data['place_id'] required
+ * @var $data['name'] required
+ * 
+ */
+function insertVideo(string $table, array $data)
+{
+    $data['id'] = uniqid();
+    $sql = new Mysql();
+    $sql->insert($table, $data);
 }
 
 

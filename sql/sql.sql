@@ -4,7 +4,9 @@ DROP TABLE IF EXISTS storage_places;
 CREATE TABLE storage_places (
     id VARCHAR(20),
     Name VARCHAR(20) UNIQUE,
-    type VARCHAR(20)
+    type VARCHAR(20),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
 );
 
 DROP TABLE IF EXISTS comic_authors;
@@ -13,7 +15,8 @@ DROP TABLE IF EXISTS comic_authors;
 CREATE TABLE comic_authors(
     id VARCHAR(20),
     name VARCHAR(20) UNIQUE,
-    created_time DATE
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
 );
 
 DROP TABLE IF EXISTS comic;
@@ -24,7 +27,8 @@ CREATE TABLE comic(
     author_id VARCHAR(20),
     place_id VARCHAR(20),
     name VARCHAR(20) UNIQUE,
-    created_time DATE
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
 );
 
 DROP TABLE IF EXISTS video_actresses;
@@ -33,7 +37,8 @@ DROP TABLE IF EXISTS video_actresses;
 CREATE TABLE video_actresses(
     id VARCHAR(20),
     name VARCHAR(20) UNIQUE,
-    created_time DATE
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
 );
 
 DROP TABLE IF EXISTS video;
@@ -44,5 +49,6 @@ CREATE TABLE video(
     actress_id VARCHAR(20),
     place_id VARCHAR(20),
     name VARCHAR(20) UNIQUE,
-    created_time DATE
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
 );

@@ -8,57 +8,51 @@ use Database\Mysql;
 use Video\Video;
 use Comic\Comic;
 
-// $mysql_address  = '127.0.0.1';
-// $mysql_username = 'root';
-// $mysql_password = 'root';
-// $mysql_database = 'arrange';
-// $sql            = new Mysql($mysql_address, $mysql_username, $mysql_password, $mysql_database);
-
+$storage_places  = 'storage_places';
+$comic_authors   = 'comic_authors';
+$comic           = 'comic';
+$video_actresses = 'video_actresses';
+$video           = 'video';
 
 function main()
 {
-    getComicInfo();
+    // getComicInfo();
+    // print_r(getVideoInfo());
+    print_r(getComicInfo());
 }
 
-function getComicInfo()
+function getComicInfo(): array
 {
     $comic = new Comic();
-    // var_dump($comic->get());
-    foreach ($comic->get() as $key => $value) {
-        echo $key;
-        echo "\n";
-        echo "V";
-        echo "\n";
-        echo $value;
-        echo "\n";
-        echo "\n";
-    }
+    return $comic->get();
 }
 
-function getVideoInfo()
+function getVideoInfo(): array
 {
     $video = new Video();
-    var_dump($video->get());
+    return $video->get();
 }
 
 function createTable($table = 'storage_places')
 {
     $createTable = "CREATE TABLE {$table}(
         id VARCHAR(20),
-        Name VARCHAR(20),
-        type VARCHAR(20)
+        name VARCHAR(20) unique,
+        created_time DATE
     );";
     $sql = new Mysql();
     $sql->rawQuery($createTable);
 }
 
-function insertData($table = 'storage_places', $data)
-{
-    $data = [
-        'id'   => uniqid(),
-        'name' => '儲存碟1',
-        'type' => '外接-sata-HDD',
-    ];
+function insertData(
+    string $table = 'storage_places',
+    array $data
+) {
+    // $data = [
+    //     'id'   => uniqid(),
+    //     'name' => '儲存碟1',
+    //     'type' => '外接-sata-HDD',
+    // ];
     $sql = new Mysql();
     $sql->insert($table, $data);
 }
@@ -114,5 +108,39 @@ function dropTable($table = 'storage_places')
     $dropTable = "drop table {$table};";
     var_dump($sql->rawQuery($dropTable));
 }
+
+function rawQuery($cmd)
+{
+    if ($cmd === null) {
+        return false;
+    }
+    $sql = new Mysql();
+    return $sql->rawQuery($cmd);
+}
+
+function nowDate(): string
+{
+    date_default_timezone_set("Asia/Taipei");
+    return date('Y-m-d H:i:s');
+}
+
+function updateActressesOrAuthors(): void
+{
+    $table = 'video_actresses';
+    foreach ($table === 'comic_authors' ? getComicInfo() : getVideoInfo() as $key => $value) {
+        $cmd = "select 1 from {$table} where name = '{$key}'";
+        if (count(rawQuery($cmd)) !== 0) {
+            continue;
+        }
+        $data = [
+            'id'           => uniqid(),
+            'name'         => $key,
+            'created_time' => nowDate(),
+        ];
+        insertData($table, $data);
+    }
+    showTableInfo($table);
+}
+
 
 main();

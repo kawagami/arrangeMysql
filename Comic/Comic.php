@@ -10,7 +10,6 @@ class Comic
         $this->authorDir  = 'D:\comic\H\*';
         $this->authorList = glob($this->authorDir);
         $this->handleArrangedAuthorList();
-        // var_dump($this->arrangedAuthorList);
     }
 
     private function handleArrangedAuthorList()
@@ -20,11 +19,34 @@ class Comic
         $subjects = $this->authorList;
         foreach ($subjects as $subject) {
             preg_match($pattern, $subject, $matches);
+            // 使用 scandir 函數取得有日文名稱的資料夾內的資料結構
+            $comicArray = scandir($subject);
+            // 刪掉 scandir 函數多出來的 . & .. 資料
+            if (($key = array_search('.', $comicArray)) !== false) {
+                unset($comicArray[$key]);
+            }
+            if (($key = array_search('..', $comicArray)) !== false) {
+                unset($comicArray[$key]);
+            }
+            // 重新排列從 0 開始的 array
+            $reSortComicArray = [];
+            foreach ($comicArray as $key => $value) {
+                $reSortComicArray[] = $value;
+            }
             if (count($matches) > 2) {
-                $this->arrangedAuthorList[trim($matches[2])] = $subject;
-                $this->arrangedAuthorList[$matches[3]] = $subject;
+                $this->arrangedAuthorList[trim($matches[2])] = [
+                    'path' => $subject,
+                    'comic' => $reSortComicArray,
+                ];
+                $this->arrangedAuthorList[$matches[3]] = [
+                    'path' => $subject,
+                    'comic' => $reSortComicArray,
+                ];
             } else {
-                $this->arrangedAuthorList[$matches[1]] = $subject;
+                $this->arrangedAuthorList[$matches[1]] = [
+                    'path' => $subject,
+                    'comic' => $reSortComicArray,
+                ];
             }
         }
     }

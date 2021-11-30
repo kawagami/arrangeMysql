@@ -14,7 +14,11 @@ class Video
     {
         $rawList = glob($this->actressPath);
         foreach ($rawList as $key => $value) {
-            $this->actressNamePathArray[basename($value)] = $value;
+            $name = basename($value);
+            $this->actressNamePathArray[$name] = [
+                'path'   => $value,
+                'videos' => glob("D:\\video\\H\\{$name}\\*"),
+            ];
         }
     }
 

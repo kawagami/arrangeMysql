@@ -27,6 +27,9 @@ CREATE TABLE comic(
     author_id VARCHAR(20),
     place_id VARCHAR(20),
     name VARCHAR(20) UNIQUE,
+    size_mb SMALLINT,
+    location TEXT,
+    backed_up BOOLEAN,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
 );
@@ -49,6 +52,9 @@ CREATE TABLE video(
     actress_id VARCHAR(20),
     place_id VARCHAR(20),
     name VARCHAR(20) UNIQUE,
+    size_mb SMALLINT,
+    location TEXT,
+    backed_up BOOLEAN,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
 );

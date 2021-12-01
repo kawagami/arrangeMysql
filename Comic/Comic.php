@@ -33,19 +33,34 @@ class Comic
             foreach ($comicArray as $key => $value) {
                 $reSortComicArray[] = $value;
             }
+            $comicDataArray = [];
+            $totalSize = 0;
+            foreach ($reSortComicArray as $k => $v) {
+                $fileTotalPath = $subject . DIRECTORY_SEPARATOR . $v;
+                $fileSize = filesize($fileTotalPath);
+                // $fileSize = 0;
+                $totalSize += $fileSize;
+                $comicDataArray[] = [
+                    'filePath' => $fileTotalPath,
+                    'fileSize' => $this->countSize($fileSize),
+                ];
+            }
             if (count($matches) > 2) {
                 $this->arrangedAuthorList[trim($matches[2])] = [
-                    'path' => $subject,
-                    'comic' => $reSortComicArray,
+                    'path'      => $subject,
+                    'comic'     => $comicDataArray,
+                    'totalSize' => $this->countSize($totalSize),
                 ];
                 $this->arrangedAuthorList[$matches[3]] = [
-                    'path' => $subject,
-                    'comic' => $reSortComicArray,
+                    'path'      => $subject,
+                    'comic'     => $comicDataArray,
+                    'totalSize' => $this->countSize($totalSize),
                 ];
             } else {
                 $this->arrangedAuthorList[$matches[1]] = [
-                    'path' => $subject,
-                    'comic' => $reSortComicArray,
+                    'path'      => $subject,
+                    'comic'     => $comicDataArray,
+                    'totalSize' => $this->countSize($totalSize),
                 ];
             }
         }
@@ -54,5 +69,44 @@ class Comic
     public function get()
     {
         return $this->arrangedAuthorList;
+    }
+
+    public function countSize($size, $times = 0)
+    {
+        while (strlen(round($size)) > 3) {
+            $times++;
+            $size = $size / 1024;
+        }
+
+        switch ($times) {
+            case 0:
+                $sizeEnd = ' bytes';
+                break;
+
+            case 1:
+                $sizeEnd = ' KB';
+                break;
+
+            case 2:
+                $sizeEnd = ' MB';
+                break;
+
+            case 3:
+                $sizeEnd = ' GB';
+                break;
+
+            case 4:
+                $sizeEnd = ' TB';
+                break;
+
+            case 5:
+                $sizeEnd = ' PB';
+                break;
+
+            default:
+                $sizeEnd = ' Too Heavy';
+                break;
+        }
+        return round($size, 2) . $sizeEnd;
     }
 }

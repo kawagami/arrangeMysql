@@ -16,16 +16,19 @@ $video           = 'video';
 
 function main()
 {
+    // $table = 'video';
+
+    // getVideoInfo();
     // getComicInfo();
     // print_r(getVideoInfo());
-    // print_r(getComicInfo());
+    print_r(getComicInfo());
 
-    $table = 'comic_authors';
     // foreach (getVideoInfo() as $key => $value) {
     //     insert($table, ['name' => $key]);
     //     # code...
     // }
-    showTableInfo($table);
+
+    // showTableInfo($table);
 }
 
 function getComicInfo(): array

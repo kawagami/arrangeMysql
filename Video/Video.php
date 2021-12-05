@@ -6,7 +6,6 @@ class Video
 {
     private $actressPath          = 'D:\video\H\*';
     private $actressNamePathArray = [];
-    private $endTimes             = 0;
 
     /**
      * 這段是『建構式』會在物件被 new 時自動執行

@@ -3,10 +3,12 @@
 require_once('Mysql.php');
 require_once('Video/Video.php');
 require_once('Comic/Comic.php');
+require_once('Func/TempVideo/TempVideo.php');
 
 use Database\Mysql;
 use Video\Video;
 use Comic\Comic;
+use Func\TempVideo\TempVideo;
 
 $storage_places  = 'storage_places';
 $comic_authors   = 'comic_authors';
@@ -16,12 +18,14 @@ $video           = 'video';
 
 function main()
 {
-    // $table = 'video';
+    // $table = 'storage_places';
+
+    print_r(TempVideo::get());
 
     // getVideoInfo();
     // getComicInfo();
     // print_r(getVideoInfo());
-    print_r(getComicInfo());
+    // print_r(getComicInfo());
 
     // foreach (getVideoInfo() as $key => $value) {
     //     insert($table, ['name' => $key]);
@@ -71,24 +75,20 @@ function insertDatas($table = 'storage_places', $datas)
 {
     $datas = [
         [
-            'id'   => uniqid(),
             'name' => 'C槽',
             'type' => '內接-M2-SSD',
         ],
         [
-            'id'   => uniqid(),
             'name' => 'D槽',
             'type' => '內接-M2-SSD',
         ],
         [
-            'id'   => uniqid(),
             'name' => '儲存碟1',
             'type' => '外接-sata-HDD',
         ],
     ];
-    $sql = new Mysql();
     foreach ($datas as $key => $value) {
-        $sql->insert($table, $value);
+        insert($table, $value);
     }
 }
 

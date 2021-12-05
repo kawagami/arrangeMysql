@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS storage_places;
 -- 儲存地點
 CREATE TABLE storage_places (
     id VARCHAR(20),
-    Name VARCHAR(20) UNIQUE,
+    name VARCHAR(20) UNIQUE,
     type VARCHAR(20),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
@@ -27,7 +27,7 @@ CREATE TABLE comic(
     author_id VARCHAR(20),
     place_id VARCHAR(20),
     name VARCHAR(20) UNIQUE,
-    size_mb SMALLINT,
+    size VARCHAR(15),
     location TEXT,
     backed_up BOOLEAN,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -52,7 +52,7 @@ CREATE TABLE video(
     actress_id VARCHAR(20),
     place_id VARCHAR(20),
     name VARCHAR(20) UNIQUE,
-    size_mb SMALLINT,
+    size VARCHAR(15),
     location TEXT,
     backed_up BOOLEAN,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

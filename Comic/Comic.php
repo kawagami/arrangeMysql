@@ -2,8 +2,12 @@
 
 namespace Comic;
 
+require_once(dirname(__FILE__) . '/../Func/CommonTrait/CommonTrait.php');
+
 class Comic
 {
+    use \Func\CommonTrait\CommonTrait;
+
     public function __construct()
     {
         // 取得作者清單、路徑
@@ -42,25 +46,25 @@ class Comic
                 $totalSize += $fileSize;
                 $comicDataArray[] = [
                     'filePath' => $fileTotalPath,
-                    'fileSize' => $this->countSize($fileSize),
+                    'fileSize' => static::countSize($fileSize),
                 ];
             }
             if (count($matches) > 2) {
                 $this->arrangedAuthorList[trim($matches[2])] = [
                     'path'      => $subject,
                     'comic'     => $comicDataArray,
-                    'totalSize' => $this->countSize($totalSize),
+                    'totalSize' => static::countSize($totalSize),
                 ];
                 $this->arrangedAuthorList[$matches[3]] = [
                     'path'      => $subject,
                     'comic'     => $comicDataArray,
-                    'totalSize' => $this->countSize($totalSize),
+                    'totalSize' => static::countSize($totalSize),
                 ];
             } else {
                 $this->arrangedAuthorList[$matches[1]] = [
                     'path'      => $subject,
                     'comic'     => $comicDataArray,
-                    'totalSize' => $this->countSize($totalSize),
+                    'totalSize' => static::countSize($totalSize),
                 ];
             }
         }
@@ -69,44 +73,5 @@ class Comic
     public function get()
     {
         return $this->arrangedAuthorList;
-    }
-
-    public function countSize($size, $times = 0)
-    {
-        while (strlen(round($size)) > 3) {
-            $times++;
-            $size = $size / 1024;
-        }
-
-        switch ($times) {
-            case 0:
-                $sizeEnd = ' bytes';
-                break;
-
-            case 1:
-                $sizeEnd = ' KB';
-                break;
-
-            case 2:
-                $sizeEnd = ' MB';
-                break;
-
-            case 3:
-                $sizeEnd = ' GB';
-                break;
-
-            case 4:
-                $sizeEnd = ' TB';
-                break;
-
-            case 5:
-                $sizeEnd = ' PB';
-                break;
-
-            default:
-                $sizeEnd = ' Too Heavy';
-                break;
-        }
-        return round($size, 2) . $sizeEnd;
     }
 }

@@ -2,8 +2,12 @@
 
 namespace Video;
 
+require_once(dirname(__FILE__) . '/../Func/CommonTrait/CommonTrait.php');
+
 class Video
 {
+    use \Func\CommonTrait\CommonTrait;
+
     private $actressPath          = 'D:\video\H\*';
     private $actressNamePathArray = [];
 
@@ -23,13 +27,13 @@ class Video
                 $totalSize += $fileSize;
                 $videoDataArray[] = [
                     'filePath' => $v,
-                    'fileSize' => $this->countSize($fileSize),
+                    'fileSize' => static::countSize($fileSize),
                 ];
             }
             $this->actressNamePathArray[$name] = [
                 'path'      => $value,
                 'videos'    => $videoDataArray,
-                'totalSize' => $this->countSize($totalSize),
+                'totalSize' => static::countSize($totalSize),
             ];
         }
     }
@@ -45,44 +49,5 @@ class Video
     public function __destruct()
     {
         // mysqli_close($this->link);
-    }
-
-    public function countSize($size, $times = 0)
-    {
-        while (strlen(round($size)) > 3) {
-            $times++;
-            $size = $size / 1024;
-        }
-
-        switch ($times) {
-            case 0:
-                $sizeEnd = ' bytes';
-                break;
-
-            case 1:
-                $sizeEnd = ' KB';
-                break;
-
-            case 2:
-                $sizeEnd = ' MB';
-                break;
-
-            case 3:
-                $sizeEnd = ' GB';
-                break;
-
-            case 4:
-                $sizeEnd = ' TB';
-                break;
-
-            case 5:
-                $sizeEnd = ' PB';
-                break;
-
-            default:
-                $sizeEnd = ' Too Heavy';
-                break;
-        }
-        return round($size, 2) . $sizeEnd;
     }
 }

@@ -20,11 +20,11 @@ function main()
 {
     // $table = 'storage_places';
 
-    print_r(TempVideo::get());
+    // print_r(TempVideo::get());
+    // print_r(Video::get());
+    print_r(Comic::get());
 
-    // getVideoInfo();
     // getComicInfo();
-    // print_r(getVideoInfo());
     // print_r(getComicInfo());
 
     // foreach (getVideoInfo() as $key => $value) {

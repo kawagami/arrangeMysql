@@ -8,15 +8,25 @@ class Video
 {
     use \Func\CommonTrait\CommonTrait;
 
-    private $actressPath          = 'D:\video\H\*';
-    private $actressNamePathArray = [];
+    private static $actressPath          = 'D:\video\H\*';
+    private static $actressNamePathArray = [];
 
     /**
      * 這段是『建構式』會在物件被 new 時自動執行
      */
     public function __construct()
     {
-        $rawList = glob($this->actressPath);
+        // 
+    }
+
+    /**
+     * 整理從 glob 取得的資料
+     * 
+     * @return void
+     */
+    private static function handleData(): void
+    {
+        $rawList = glob(static::$actressPath);
         foreach ($rawList as $key => $value) {
             $name           = basename($value);
             $videoArray     = glob("D:\\video\\H\\{$name}\\*");
@@ -30,7 +40,7 @@ class Video
                     'fileSize' => static::countSize($fileSize),
                 ];
             }
-            $this->actressNamePathArray[$name] = [
+            static::$actressNamePathArray[$name] = [
                 'path'      => $value,
                 'videos'    => $videoDataArray,
                 'totalSize' => static::countSize($totalSize),
@@ -38,9 +48,15 @@ class Video
         }
     }
 
-    public function get()
+    /**
+     * 呼叫整理資料的 method 並回傳整理後的資料
+     * 
+     * @return array
+     */
+    public static function get(): array
     {
-        return $this->actressNamePathArray;
+        static::handleData();
+        return static::$actressNamePathArray;
     }
 
     /**

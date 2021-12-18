@@ -8,19 +8,19 @@ class Comic
 {
     use \Func\CommonTrait\CommonTrait;
 
+    private static $authorDir          = 'D:\comic\H\*';
+    private static $arrangedAuthorList = [];
+
     public function __construct()
     {
-        // 取得作者清單、路徑
-        $this->authorDir  = 'D:\comic\H\*';
-        $this->authorList = glob($this->authorDir);
-        $this->handleArrangedAuthorList();
+        // 
     }
 
-    private function handleArrangedAuthorList()
+    private static function handleArrangedAuthorList()
     {
         // 取得所有作者名稱、返回
         $pattern = '/\[(.*[^()])\]|\[(.*) ?\((.*)\)/';
-        $subjects = $this->authorList;
+        $subjects = glob(static::$authorDir);
         foreach ($subjects as $subject) {
             preg_match($pattern, $subject, $matches);
             // 使用 scandir 函數取得有日文名稱的資料夾內的資料結構
@@ -50,18 +50,18 @@ class Comic
                 ];
             }
             if (count($matches) > 2) {
-                $this->arrangedAuthorList[trim($matches[2])] = [
+                static::$arrangedAuthorList[trim($matches[2])] = [
                     'path'      => $subject,
                     'comic'     => $comicDataArray,
                     'totalSize' => static::countSize($totalSize),
                 ];
-                $this->arrangedAuthorList[$matches[3]] = [
+                static::$arrangedAuthorList[$matches[3]] = [
                     'path'      => $subject,
                     'comic'     => $comicDataArray,
                     'totalSize' => static::countSize($totalSize),
                 ];
             } else {
-                $this->arrangedAuthorList[$matches[1]] = [
+                static::$arrangedAuthorList[$matches[1]] = [
                     'path'      => $subject,
                     'comic'     => $comicDataArray,
                     'totalSize' => static::countSize($totalSize),
@@ -70,8 +70,14 @@ class Comic
         }
     }
 
-    public function get()
+    /**
+     * 呼叫整理資料的 method 並回傳整理後的資料
+     * 
+     * @return array
+     */
+    public static function get(): array
     {
-        return $this->arrangedAuthorList;
+        static::handleArrangedAuthorList();
+        return static::$arrangedAuthorList;
     }
 }

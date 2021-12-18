@@ -1,9 +1,11 @@
 <?php
 function compressComicAndDeleteDirectory($path)
 {
+    echo "{$path}";
+    echo "\n";
+    echo "Handling";
+    echo "\n";
     if (!is_dir($path)) {
-        echo "{$path}";
-        echo "\n";
         echo "不是資料夾";
         echo "\n";
         echo "\n";
@@ -25,6 +27,8 @@ function compressComicAndDeleteDirectory($path)
             RecursiveIteratorIterator::LEAVES_ONLY
         );
 
+        echo basename($path) . " Compressing !";
+        echo "\n";
         foreach ($files as $name => $file) {
             // Skip directories (they would be added automatically)
             if (!$file->isDir()) {
@@ -40,6 +44,7 @@ function compressComicAndDeleteDirectory($path)
         // Zip archive will be created only after closing object
         $zip->close();
         echo basename($path) . ' Compress Done !';
+        echo "\n";
         echo "\n";
         delete($path);
         // removeFiles($path);

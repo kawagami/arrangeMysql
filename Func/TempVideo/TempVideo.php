@@ -33,12 +33,22 @@ class TempVideo
         // }
     }
 
+    /**
+     * 呼叫整理資料的 method 並回傳整理後的資料
+     * 
+     * @return array
+     */
     public static function get(): array
     {
         static::handleData();
         return static::$result;
     }
 
+    /**
+     * 整理從 glob 取得的資料
+     * 
+     * @return void
+     */
     public static function handleData(): void
     {
         $result = [];
@@ -54,6 +64,11 @@ class TempVideo
         static::$result = $result;
     }
 
+    /**
+     * 用靜態方法取得這個 class 的 instance
+     * 
+     * @return TempVideo
+     */
     public static function getInstance(): TempVideo
     {
 
@@ -72,7 +87,12 @@ class TempVideo
         // mysqli_close($this->link);
     }
 
-    private static function globPath()
+    /**
+     * 返回特定附檔名給 glob 查詢的字串
+     * 
+     * @return string
+     */
+    private static function globPath(): string
     {
         $types = [
             'mp4',
@@ -91,8 +111,14 @@ class TempVideo
         return $path;
     }
 
-    public static function countSize($size, $times = 0)
+    /**
+     * 返回檔案大小的字串
+     * 
+     * @return string
+     */
+    public static function countSize(int $size): string
     {
+        $times = 0;
         while (strlen(round($size)) > 3) {
             $times++;
             $size = $size / 1024;
@@ -100,33 +126,33 @@ class TempVideo
 
         switch ($times) {
             case 0:
-                $sizeEnd = ' bytes';
+                $sizeEnd = 'bytes';
                 break;
 
             case 1:
-                $sizeEnd = ' KB';
+                $sizeEnd = 'KB';
                 break;
 
             case 2:
-                $sizeEnd = ' MB';
+                $sizeEnd = 'MB';
                 break;
 
             case 3:
-                $sizeEnd = ' GB';
+                $sizeEnd = 'GB';
                 break;
 
             case 4:
-                $sizeEnd = ' TB';
+                $sizeEnd = 'TB';
                 break;
 
             case 5:
-                $sizeEnd = ' PB';
+                $sizeEnd = 'PB';
                 break;
 
             default:
-                $sizeEnd = ' Too Heavy';
+                $sizeEnd = 'Too Heavy';
                 break;
         }
-        return round($size, 2) . $sizeEnd;
+        return round($size, 2) . ' ' . $sizeEnd;
     }
 }

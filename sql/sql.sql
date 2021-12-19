@@ -58,3 +58,21 @@ CREATE TABLE video(
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
 );
+
+DROP TABLE IF EXISTS temp_table;
+
+-- 影片
+CREATE TABLE temp_table(
+    id int NOT NULL AUTO_INCREMENT,
+    basename VARCHAR(100),
+    person VARCHAR(50),
+    size VARCHAR(10),
+    file_type VARCHAR(10),
+    raw_data TEXT,
+    location TEXT,
+    backed_up BOOLEAN,
+    log_time INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY(id)
+);

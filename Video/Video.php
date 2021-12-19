@@ -33,11 +33,17 @@ class Video
             $videoDataArray = [];
             $totalSize      = 0;
             foreach ($videoArray as $k => $v) {
-                $fileSize   = filesize($v);
-                $totalSize += $fileSize;
-                $videoDataArray[] = [
-                    'filePath' => $v,
-                    'fileSize' => static::countSize($fileSize),
+                $fileSize             = filesize($v);
+                $fileNameAndDataType  = explode('.', basename($v));
+                $totalSize           += $fileSize;
+                $fileNameAndDataType[0] = count(explode('\\', $fileNameAndDataType[0])) > 1 ? explode('\\', $fileNameAndDataType[0])[1] : $fileNameAndDataType[0];
+                $videoDataArray[]  = [
+                    'raw_data'  => $v,
+                    'basename'  => $fileNameAndDataType[0],
+                    'person'    => $name ?? null,
+                    'file_type' => $fileNameAndDataType[1],
+                    'size'      => static::countSize($fileSize),
+                    'log_time'  => time(),
                 ];
             }
             static::$actressNamePathArray[$name] = [

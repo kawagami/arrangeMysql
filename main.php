@@ -22,10 +22,17 @@ function main()
 
     // print_r(TempVideo::get());
     // print_r(Video::get());
-    print_r(Comic::get());
 
-    // getComicInfo();
-    // print_r(getComicInfo());
+    $query = processQuery(TempVideo::get());
+    rawQuery($query);
+    // $data = [
+    //     'raw_data'  => 'D:\JULIA-押しの強い爆乳女の熱くねっとり下品なSEX.avi',
+    //     'basename'  => 'JULIA-押しの強い爆乳女の熱くねっとり下品なSEX',
+    //     'file_type' => 'avi',
+    //     'size'      => '978.48 MB',
+    //     'log_time'  => time(),
+    // ];
+    // insertData($data);
 
     // foreach (getVideoInfo() as $key => $value) {
     //     insert($table, ['name' => $key]);
@@ -33,6 +40,96 @@ function main()
     // }
 
     // showTableInfo($table);
+}
+
+/**
+ * 丟入多筆資料 array 產出 insert 的 query
+ * 
+ * @param array $data
+ * @return string
+ */
+function processQuery(array $data, string $table = 'temp_table'): string
+{
+    $columnName   = [];
+    $valueArray   = [];
+    foreach ($data as $rowData) {
+        $tempValueArray = [];
+        foreach ($rowData as $column => $value) {
+            if (!in_array("`$column`", $columnName)) {
+                $columnName[] = "`$column`"; // 取得欄位名稱
+            }
+            $value = str_replace('\\', '\\\\', $value); // 沒變換的話在資料庫內單斜線會消失
+            $tempValueArray[] = "'$value'"; // 將 value 存入 temp array
+        }
+        $valueArray[] = '(' . join(',', $tempValueArray) . ')'; // 將 temp array 的 value 用 join 整理成一筆要存入的 value
+    }
+    $queryColumn = '(' . join(',', $columnName) . ')';
+    $queryValue  = join(',', $valueArray) . ';';
+    $query       = "INSERT INTO {$table} {$queryColumn} VALUES {$queryValue}";  // 插入資料的 sql 語句
+    return $query;
+}
+
+/**
+ * 一次插入多行資料
+ */
+function insertMultipleRows()
+{
+    // example
+    // 
+    // INSERT INTO
+    //     table_name (column_list)
+    // VALUES
+    //     (value_list_1),
+    //     (value_list_2),
+    //     ...
+    //     (value_list_n);
+    $table        = 'temp_table';
+    $columnName   = [];
+    $valueArray   = [];
+    foreach (Video::get() as $v1) {
+        foreach ($v1 as $v2) {
+            if (is_array($v2)) {
+                foreach ($v2 as $v3) {
+                    $tempValueArray = [];
+                    foreach ($v3 as $key => $value) {
+                        if (!in_array("`$key`", $columnName)) {
+                            $columnName[] = "`$key`"; // 取得欄位名稱
+                        }
+                        $value = str_replace('\\', '\\\\', $value); // 沒變換的話在資料庫內單斜線會消失
+                        $tempValueArray[] = "'$value'"; // 將 value 存入 temp array
+                    }
+                    $valueArray[] = '(' . join(',', $tempValueArray) . ')'; // 將 temp array 的 value 用 join 整理成一筆要存入的 value
+                }
+            }
+        }
+    }
+    $queryColumn = '(' . join(',', $columnName) . ')';
+    $queryValue  = join(',', $valueArray) . ';';
+    $query       = "INSERT INTO {$table} {$queryColumn} VALUES {$queryValue}";  // 插入資料的 sql 語句
+    // rawQuery($query); // 執行 query
+}
+
+/**
+ * 新增整理過的資料夾內的資料進資料庫
+ * 不考慮速度的寫法 很慢
+ * 
+ * @param array $arrangedData
+ */
+function insertArrangedData(array $arrangedData)
+{
+    foreach ($arrangedData as $v1) {
+        foreach ($v1 as $v2) {
+            if (is_array($v2)) {
+                foreach ($v2 as $v3) {
+                    insertData($v3);
+                    // print_r($v3);
+                }
+                // print_r($v2);
+                # code...
+            }
+        }
+        // echo PHP_EOL;
+    }
 }
 
 function getComicInfo(): array
@@ -59,8 +156,8 @@ function createTable($table = 'storage_places')
 }
 
 function insertData(
-    string $table = 'storage_places',
-    array $data
+    array $data,
+    string $table = 'temp_table'
 ) {
     // $data = [
     //     'id'   => uniqid(),
@@ -134,23 +231,23 @@ function nowDate(): string
     return date('Y-m-d H:i:s');
 }
 
-function updateActressesOrAuthors(): void
-{
-    $table = 'video_actresses';
-    foreach ($table === 'comic_authors' ? getComicInfo() : getVideoInfo() as $key => $value) {
-        $cmd = "select 1 from {$table} where name = '{$key}'";
-        if (count(rawQuery($cmd)) !== 0) {
-            continue;
-        }
-        $data = [
-            'id'           => uniqid(),
-            'name'         => $key,
-            'created_time' => nowDate(),
-        ];
-        insertData($table, $data);
-    }
-    showTableInfo($table);
-}
+// function updateActressesOrAuthors(): void
+// {
+//     $table = 'video_actresses';
+//     foreach ($table === 'comic_authors' ? getComicInfo() : getVideoInfo() as $key => $value) {
+//         $cmd = "select 1 from {$table} where name = '{$key}'";
+//         if (count(rawQuery($cmd)) !== 0) {
+//             continue;
+//         }
+//         $data = [
+//             'id'           => uniqid(),
+//             'name'         => $key,
+//             'created_time' => nowDate(),
+//         ];
+//         insertData($table, $data);
+//     }
+//     showTableInfo($table);
+// }
 
 function insert($table, $data)
 {
